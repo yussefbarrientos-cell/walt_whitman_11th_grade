@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Whitman Studio: Advanced Reader Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5ee;--surface:#fbfdf9;--ink:#17261d;--mute:#4f6355;--line:#cfdac9;--acc:#2b6a3b;--acc2:#3a4a8c;--accbg:#dfeedd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1712;--surface:#16211a;--ink:#e6efe6;--mute:#9db3a2;--line:#2a3b30;--acc:#7fc48d;--acc2:#9fb0ee;--accbg:#1d3324;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1712;--surface:#16211a;--ink:#e6efe6;--mute:#9db3a2;--line:#2a3b30;--acc:#7fc48d;--acc2:#9fb0ee;--accbg:#1d3324;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Spectral,Georgia,serif}
+.ui,button,input,select,textarea,nav a{font-family:"Work Sans",system-ui,sans-serif}
+header{padding:2.2rem 1.2rem 1rem;max-width:860px;margin:0 auto}
+h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;margin:0 0 .5rem;font-weight:600;letter-spacing:-.01em}
+.eq{color:var(--mute);font-style:italic;max-width:60ch;margin:0}
+nav{display:flex;gap:.4rem;overflow-x:auto;padding:.6rem 1.2rem;max-width:860px;margin:0 auto;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav a{padding:.45rem .85rem;border:1px solid var(--line);border-radius:99px;color:var(--ink);text-decoration:none;font-size:.9rem;white-space:nowrap}
+nav a[aria-current=page]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+main{max-width:860px;margin:0 auto;padding:1rem 1.2rem 4rem}
+section.view{display:none}section.view.on{display:block}
+h2{font-size:1.6rem;margin:.6rem 0 .3rem}
+p.lead{color:var(--mute);margin-top:0;max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;margin:1rem 0}
+blockquote{margin:.2rem 0 .8rem;padding-left:1rem;border-left:3px solid var(--acc);font-size:1.15rem;font-style:italic}
+.tag{font:500 .78rem "Work Sans",sans-serif;color:var(--acc);background:var(--accbg);padding:.15rem .55rem;border-radius:99px;display:inline-block;margin-bottom:.4rem}
+.step{margin:.5rem 0}.step b{font-family:"Work Sans",sans-serif;font-size:.9rem}
+textarea,input[type=text],select{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.6rem .7rem;font-size:.95rem;margin-top:.3rem}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+button{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:.55rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+details summary{cursor:pointer;font-family:"Work Sans",sans-serif;font-weight:500;color:var(--acc2)}
+.meta{font:.82rem "Work Sans",sans-serif;color:var(--mute)}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+label{font:500 .88rem "Work Sans",sans-serif;display:block;margin-top:.7rem}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.saved{opacity:0;transition:opacity .3s}.saved.show{opacity:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>Whitman Studio</h1>
+<p class="eq">Essential question: Which matters more, individuality or community? Here, you won’t just answer it. You’ll test it against the texts, against history, and against your own writing.</p>
+</header>
+<nav id="nav" class="ui" aria-label="Sections"></nav>
+<main>
+
+<section class="view" id="lab">
+<h2>Close reading lab</h2>
+<p class="lead">Each passage starts where the textbook stops. Notice the craft, complicate your first reading, then commit to a claim. Your responses save on this device.</p>
+<div id="passages"></div>
+</section>
+
+<section class="view" id="lenses">
+<h2>Critical lenses</h2>
+<p class="lead">The same poem reads differently through different frameworks. Pick two lenses, apply them to one passage, and decide which one explains more.</p>
+<div id="lensList"></div>
+</section>
+
+<section class="view" id="pairings">
+<h2>Conversations across time</h2>
+<p class="lead">Whitman’s ideas have been answered, extended, and argued with. Find at least one of these texts, read it, and put it in dialogue with Whitman.</p>
+<div id="pairList"></div>
+</section>
+
+<section class="view" id="seminar">
+<h2>Seminar room</h2>
+<p class="lead">Prepare for a student-led discussion. Place yourself on the spectrum, justify it, and bring one question nobody else will ask.</p>
+<div class="card">
+<label for="pos">Where do you stand right now on the essential question?</label>
+<input type="range" id="pos" min="0" max="100" value="50" aria-describedby="posOut">
+<div class="row meta" style="justify-content:space-between"><span>Individuality matters more</span><span id="posOut"></span><span>Community matters more</span></div>
+<label for="posWhy">Defend your position using one line from Whitman (and say what it assumes)</label>
+<textarea id="posWhy" data-save="seminar-why"></textarea>
+<label for="posChange">After discussion, what changed or held firm in your thinking?</label>
+<textarea id="posChange" data-save="seminar-change"></textarea>
+</div>
+<div id="qList"></div>
+</section>
+
+<section class="view" id="studio">
+<h2>Writing studio</h2>
+<p class="lead">Choose a product, build it, then score it against the rubric before you submit.</p>
+<div class="card">
+<label for="product">Choose your product</label>
+<select id="product"></select>
+<p id="prodDesc" class="meta"></p>
+<div id="scaffold" class="meta"></div>
+<label for="draft">Draft</label>
+<textarea id="draft" data-save="draft" style="min-height:260px"></textarea>
+<div class="row meta"><span id="wc">0 words</span><span class="saved" id="sv">Saved</span></div>
+</div>
+<div class="card">
+<b class="ui">Self-assess before you submit</b>
+<div id="rubric"></div>
+<button class="ghost" id="copyWork" style="margin-top:.8rem">Copy my work and scores</button>
+<span class="meta" id="cpMsg"></span>
+</div>
+</section>
+
+<section class="view" id="desk">
+<h2>Teacher desk</h2>
+<p class="lead">Turn what you see in a student’s work into a specific, actionable message. Pick the evidence and the next move; the draft is yours to edit.</p>
+<div class="card">
+<label for="stu">Student name</label><input type="text" id="stu">
+<label for="str">What they did well</label><select id="str"></select>
+<label for="nxt">Next move to push them</label><select id="nxt"></select>
+<label for="ev">Evidence from their work (a line or observation)</label><textarea id="ev" style="min-height:70px"></textarea>
+<div class="row" style="margin-top:.8rem"><button id="mk">Draft message</button><button class="ghost" id="cp">Copy</button></div>
+<label for="out">Message</label><textarea id="out" style="min-height:150px"></textarea>
+</div>
+<div class="card meta">Tip: a Lexile score tells you what a student can decode. These tasks raise the ceiling on thinking: contested claims, form-and-meaning analysis, cross-text synthesis, and original craft. Track which move each student attempts, not only whether they finish.</div>
+</section>
+</main>
+
+<script>
+const $=(s)=>document.querySelector(s);
+const store={get(k){try{return localStorage.getItem('ws:'+k)||''}catch(e){return ''}},set(k,v){try{localStorage.setItem('ws:'+k,v)}catch(e){}}};
+
+const P=[
+{t:'Preface, 1855',q:'The United States themselves are essentially the greatest poem.',n:'Notice the plural verb “are.” Whitman treats the nation as a collection, not a single unit.',c:'Some historians connect the later shift to “the United States is” with the Civil War. If that is right, what is Whitman’s grammar claiming in 1855, and what is it risking? Is a nation-as-poem a community or a crowd of individuals?'},
+{t:'Song of Myself, Section 1',q:'For every atom belonging to me as good belongs to you.',n:'The first line announces self-celebration, then the third line hands it to the reader.',c:'Rewrite the line so it says the opposite (“every atom belonging to me is mine alone”). What does the poem lose? Argue that the opening is selfish, then argue that it is the most generous gesture in the poem. Which case is stronger?'},
+{t:'Song of Myself, Section 51',q:'Do I contradict myself? / Very well then I contradict myself, / (I am large, I contain multitudes.)',n:'Look at the parenthesis, the concession in “Very well then,” and the shift from question to answer.',c:'The textbook asks whom the speaker addresses. Go further: is the “multitudes” claim a defense of individuality (one self, many parts) or a dissolving of it (the self as a crowd)? Where does a self with multitudes stop and a community begin?'},
+{t:'Song of Myself, Section 52',q:'If you want me again look for me under your boot soles.',n:'The speaker’s body becomes grass, then becomes the ground the reader walks on.',c:'Trace every verb of departure in the section (depart, shake, effuse, bequeath). Does the speaker vanish, or spread? Compare with Section 6’s claim that death is “luckier.” What would an individualist critic say about a self that wants to become part of you?'},
+{t:'I Hear America Singing',q:'Each singing what belongs to him or her and to none else.',n:'The catalog is built from repeated “singing” and a list of workers, each given a song.',c:'The poem is a chorus of solos. Is that a harmony or a coincidence? Identify who is absent from the catalog, then decide whether the omission is a flaw in the poem, a feature of its moment, or a test of the reader. Defend your reading with syntax, not just history.'}
+];
+const L=[
+['Formalist','How does form make the argument? Examine the catalog, repeated “singing,” free verse, and the parenthetical aside in Section 51. Claim: a feature of form that enacts community or individuality.'],
+['Historical','The textbook notes Whitman was fired in 1848 for opposing slavery. Read that against the catalog in “I Hear America Singing.” What does the poem include, exclude, or silently assume about 1855 America?'],
+['Transcendentalist','Emerson praised the collection and called for a new American poet. Where does Whitman fulfill that call, and where does he exceed or strain it? Is the self a path to the universal?'],
+['Translation','Read Iskander’s poem in English and in the Arabic facing text. The translator renders “bells,” “beard,” and “spring” in English. What choices might a translator face with “yawp” or “multitudes”? What does Iskander’s act of imitation say about community across borders?'],
+['Reader’s ethics','In Section 6 the child asks “What is the grass?” and the speaker admits he does not know. What is the ethical stance of a teacher, poet, or leader who says this? Does a community need confident voices, honest ones, or both?']
+];
+const PR=[
+['Emerson, “The Poet” (1844)','The essay Whitman answered. Find the poet Emerson describes. Does Whitman fit, exceed, or break the mold? What does Emerson assume about the relationship between poet and public?'],
+['Langston Hughes, “I, Too”','A direct reply to “I Hear America Singing.” Which choices in Hughes’s form and voice answer Whitman’s catalog? Does Hughes revise Whitman’s idea of community, or fulfill it?'],
+['Allen Ginsberg, “A Supermarket in California”','A later poet addresses Whitman directly. Compare how Ginsberg and Iskander each treat Whitman as a guide. What does each admire and what does each quietly change?'],
+['Ghareeb Iskander, “Song of Myself” (in your textbook)','Already in your unit. Annotate the shifts between wanting to be Whitman and finding a voice of one’s own. Is imitation a form of individuality or of community?']
+];
+const Q=[
+['Warm-up','Which single word in the Preface best captures Whitman’s idea of America, and what does it leave out?'],
+['Stretch','If “I contain multitudes” were a policy rather than a poem, what kind of society would it produce?'],
+['Stretch','Is the speaker of “Song of Myself” a person, a persona, or a position? Support your answer from two sections.'],
+['Challenge','Whitman revised Leaves of Grass for decades. Does that revision strengthen or weaken the claim that the poems are one continuous self?'],
+['Challenge','Design a question about these texts that has no right answer but has wrong answers. Explain the difference.']
+];
+const PRODS={
+essay:['Analytical essay (700–1000 words)','Argue a debatable claim that connects at least two passages and one outside text to the essential question.','Scaffold: Although [common reading], Whitman [verb] by [technique in a specific passage], which reveals [claim about individuality and community]. This matters because [stakes].'],
+imit:['Imitation + writer’s memo','Write a catalog poem in Whitman’s style about your own community, then a 250-word memo explaining three craft choices and what you chose not to copy.','Scaffold: Open with a verb of hearing or seeing. Build a catalog of at least eight specific people or acts. Include one parenthetical aside. End by revealing who or what the catalog cannot hold.'],
+letter:['Open letter to Whitman','Write to Whitman from 2026. Take his side or push back, using at least four specific references to his text and one to Iskander or Hughes.','Scaffold: Name what you admire, name what you resist, then ask a question he cannot easily answer.']
+};
+const RUB=[['Insight: a claim that surprises and can be argued'],['Evidence: specific language, syntax, or form analyzed, not summarized'],['Synthesis: connects texts, history, or lenses'],['Craft: precise word choice, varied sentences, purposeful structure']];
+
+function sv(el){store.set(el.dataset.save,el.value);const s=$('#sv');if(s){s.classList.add('show');setTimeout(()=>s.classList.remove('show'),900)}}
+function bindSave(root){root.querySelectorAll('[data-save]').forEach(el=>{el.value=store.get(el.dataset.save);el.addEventListener('input',()=>sv(el))})}
+
+$('#passages').innerHTML=P.map((p,i)=>`<div class="card"><span class="tag">${p.t}</span><blockquote>${p.q}</blockquote>
+<div class="step"><b>Notice.</b> ${p.n}</div>
+<div class="step"><b>Complicate.</b> ${p.c}</div>
+<label for="p${i}">Your claim (one sentence), then your evidence</label>
+<textarea id="p${i}" data-save="pass-${i}"></textarea></div>`).join('');
+$('#lensList').innerHTML=L.map((l,i)=>`<div class="card"><span class="tag">${l[0]}</span><p style="margin:.2rem 0">${l[1]}</p>
+<label for="l${i}">Your application</label><textarea id="l${i}" data-save="lens-${i}"></textarea></div>`).join('')+
+`<div class="card"><label for="lensVs">Which two lenses explain the most, and which one would you drop? Why?</label><textarea id="lensVs" data-save="lens-vs"></textarea></div>`;
+$('#pairList').innerHTML=PR.map((p,i)=>`<div class="card"><b class="ui">${p[0]}</b><p style="margin:.3rem 0">${p[1]}</p>
+<label for="r${i}">Your response</label><textarea id="r${i}" data-save="pair-${i}"></textarea></div>`).join('');
+$('#qList').innerHTML=Q.map((q,i)=>`<div class="card"><span class="tag">${q[0]}</span><p style="margin:.2rem 0">${q[1]}</p>
+<textarea id="q${i}" data-save="q-${i}" aria-label="Notes for question ${i+1}" style="min-height:70px"></textarea></div>`).join('');
+
+const prod=$('#product');prod.innerHTML=Object.entries(PRODS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join('');
+function showProd(){const v=PRODS[prod.value];$('#prodDesc').textContent=v[1];$('#scaffold').textContent=v[2];store.set('prod',prod.value)}
+prod.value=store.get('prod')||'essay';showProd();prod.addEventListener('change',showProd);
+$('#rubric').innerHTML=RUB.map((r,i)=>`<label for="rb${i}">${r[0]} <span class="meta" id="rv${i}"></span></label><input type="range" id="rb${i}" min="1" max="4" value="${store.get('rb'+i)||2}">`).join('');
+RUB.forEach((r,i)=>{const e=$('#rb'+i),o=$('#rv'+i),nm=['','Emerging','Developing','Proficient','Exceptional'];const u=()=>{o.textContent='('+e.value+' – '+nm[e.value]+')';store.set('rb'+i,e.value)};e.addEventListener('input',u);u()});
+
+const dr=$('#draft');function wc(){const n=(dr.value.trim().match(/\S+/g)||[]).length;$('#wc').textContent=n+' words'}
+bindSave(document);dr.addEventListener('input',wc);wc();
+const pos=$('#pos');pos.value=store.get('pos')||50;
+function up(){$('#posOut').textContent=pos.value<45?'Leaning individual':pos.value>55?'Leaning community':'In tension';store.set('pos',pos.value)}pos.addEventListener('input',up);up();
+
+$('#copyWork').onclick=()=>{const sc=RUB.map((r,i)=>r[0].split(':')[0]+': '+$('#rb'+i).value+'/4').join('\n');
+navigator.clipboard.writeText(PRODS[prod.value][0]+'\n\n'+dr.value+'\n\nSelf-assessment\n'+sc).then(()=>{$('#cpMsg').textContent=' Copied.'},()=>{$('#cpMsg').textContent=' Copy failed; select the text manually.'})};
+
+const STR=['built an original claim instead of summarizing','analyzed syntax and form, not only theme','connected the poem to history or another text','took a risk with an interpretation and defended it','wrote with strong, precise language'];
+const NXT=['anticipate a counterargument and answer it','move from “what” the line says to “how” its structure creates meaning','bring in a second text to test the claim','revise the thesis so it could be reasonably disputed','cut the first paragraph and begin where the thinking starts'];
+$('#str').innerHTML=STR.map(s=>`<option>${s}</option>`).join('');$('#nxt').innerHTML=NXT.map(s=>`<option>${s}</option>`).join('');
+$('#mk').onclick=()=>{const n=$('#stu').value.trim()||'there',e=$('#ev').value.trim();
+$('#out').value=`Hi ${n},\n\nYour recent work shows real strength: you ${$('#str').value}.${e?' For example: '+e+'.':''}\n\nTo push your thinking further, your next move is to ${$('#nxt').value}. Try it on one paragraph first and we’ll look at it together.\n\nThis is the kind of thinking that makes a reader stop and reconsider, and I want to see you go further with it.`};
+$('#cp').onclick=()=>navigator.clipboard.writeText($('#out').value).catch(()=>{});
+
+const TABS=[['lab','Close reading'],['lenses','Lenses'],['pairings','Pairings'],['seminar','Seminar'],['studio','Writing'],['desk','Teacher desk']];
+$('#nav').innerHTML=TABS.map(t=>`<a href="#${t[0]}" data-t="${t[0]}">${t[1]}</a>`).join('');
+function route(){const h=(location.hash||'#lab').slice(1);const id=TABS.some(t=>t[0]===h)?h:'lab';
+document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
+document.querySelectorAll('nav a').forEach(a=>a.toggleAttribute('aria-current',a.dataset.t===id)||a.removeAttribute('aria-current'));
+document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.t===id)a.setAttribute('aria-current','page')})}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
